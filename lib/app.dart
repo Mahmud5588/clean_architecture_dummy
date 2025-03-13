@@ -1,3 +1,5 @@
+import 'package:clean_architecture_dummy/core/route/route_generators.dart';
+import 'package:clean_architecture_dummy/core/route/route_names.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -5,6 +7,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MaterialApp(
+      initialRoute: RouteNames.signInPage,
+      onGenerateRoute: AppRoute(context: context).onGenerateRoute,
+    );
   }
 }

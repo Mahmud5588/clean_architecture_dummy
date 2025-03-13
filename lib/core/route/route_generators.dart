@@ -1,5 +1,6 @@
-import 'package:clean_architecture_dummy/app.dart';
 import 'package:clean_architecture_dummy/core/route/route_names.dart';
+import 'package:clean_architecture_dummy/feauteres/product/presentation/pages/all_product_page.dart';
+import 'package:clean_architecture_dummy/feauteres/product/presentation/pages/product_page.dart';
 import 'package:flutter/material.dart';
 
 class AppRoute {
@@ -10,7 +11,9 @@ class AppRoute {
   Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouteNames.signInPage:
-        return MaterialPageRoute(builder: (_) => MyApp());
+        return MaterialPageRoute(builder: (_) => ProductPage());
+      case RouteNames.signInPage:
+        return MaterialPageRoute(builder: (_) => AllProductsPage());
       default:
         return _errorRoute();
     }
