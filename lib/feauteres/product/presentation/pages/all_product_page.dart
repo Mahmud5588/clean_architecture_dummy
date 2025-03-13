@@ -1,5 +1,7 @@
 import 'package:clean_architecture_dummy/feauteres/product/presentation/manager/all_product/all_product_state.dart';
 import 'package:clean_architecture_dummy/feauteres/product/presentation/manager/single_product/product_provider.dart';
+import 'package:clean_architecture_dummy/feauteres/product/presentation/pages/category_page.dart';
+import 'package:clean_architecture_dummy/feauteres/product/presentation/pages/product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +21,12 @@ class _AllProductsPageState extends ConsumerState<AllProductsPage> {
     ref.read(allProductsProvider.notifier).searchProducts(word: word);
   }
 
+  void sortProducts(String sortName) {
+    ref
+        .read(allProductsProvider.notifier)
+        .sortProductsUseCase(sortName: sortName, ascDesc: "asc");
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,20 +40,19 @@ class _AllProductsPageState extends ConsumerState<AllProductsPage> {
     final allProductsState = ref.watch(allProductsProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "All products",
-        ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => CategoryPage()));
+            },
+            icon: Icon(Icons.filter_list_alt)),
+        title: const Text("All Products"),
         centerTitle: true,
         backgroundColor: Colors.green,
         actions: [
           IconButton(
-            onPressed: () {
-              getAllProducts();
-            },
-            icon: const Icon(
-              Icons.get_app,
-              color: Colors.white,
-            ),
+            onPressed: getAllProducts,
+            icon: const Icon(Icons.refresh, color: Colors.white),
           ),
         ],
       ),
@@ -54,93 +61,43 @@ class _AllProductsPageState extends ConsumerState<AllProductsPage> {
         child: Column(
           children: [
             TextField(
-              decoration: const InputDecoration(
-                hintText: "Search",
-              ),
+              decoration: const InputDecoration(hintText: "Search"),
               onChanged: (String value) {
-                if (value == "") {
+                if (value.isEmpty) {
                   getAllProducts();
                 } else {
                   searchAllProducts(word: value);
                 }
               },
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    ref
-                        .read(allProductsProvider.notifier)
-                        .sortProductsUseCase(sortName: "title", ascDesc: "asc");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, // Button color
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Change border radius
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12), // Padding
-                  ),
-                  child: const Text(
-                    "Title",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
+                  onPressed: () => sortProducts("title"),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  child: const Text("Title",
+                      style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    ref
-                        .read(allProductsProvider.notifier)
-                        .sortProductsUseCase(sortName: "price", ascDesc: "asc");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, // Button color
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Change border radius
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12), // Padding
-                  ),
-                  child: const Text(
-                    "Price",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
+                  onPressed: () => sortProducts("price"),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  child: const Text("Price",
+                      style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    ref.read(allProductsProvider.notifier).sortProductsUseCase(
-                        sortName: "rating", ascDesc: "asc");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, // Button color
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Change border radius
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12), // Padding
-                  ),
-                  child: const Text(
-                    "Rating",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
+                  onPressed: () => sortProducts("rating"),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  child: const Text("Rating",
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             if (allProductsState is AllProductsLoading)
               const CircularProgressIndicator(),
             if (allProductsState is AllProductsError)
@@ -148,33 +105,36 @@ class _AllProductsPageState extends ConsumerState<AllProductsPage> {
             if (allProductsState is AllProductsLoaded)
               Expanded(
                 child: ListView.builder(
-                    itemCount: allProductsState.allProducts.products.length,
-                    itemBuilder: (context, index) {
-                      final product =
-                          allProductsState.allProducts.products[index];
+                  itemCount: allProductsState.allProducts.products.length,
+                  itemBuilder: (context, index) {
+                    final product =
+                        allProductsState.allProducts.products[index];
 
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Image.network(
-                            product.thumbnail,
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(product.thumbnail),
+                      ),
+                      title: Text(
+                        product.title,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        "\$${product.price}",
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.normal),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductPage(product: product),
                           ),
-                        ),
-                        title: Text(
-                          product.title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          product.price.toString(),
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
           ],
         ),

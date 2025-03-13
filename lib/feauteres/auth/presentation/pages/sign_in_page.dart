@@ -1,6 +1,6 @@
 import 'package:clean_architecture_dummy/feauteres/auth/presentation/manager/auth_notifier.dart';
 import 'package:clean_architecture_dummy/feauteres/auth/presentation/manager/auth_state.dart';
-import 'package:clean_architecture_dummy/feauteres/product/presentation/pages/product_page.dart';
+import 'package:clean_architecture_dummy/feauteres/product/presentation/pages/all_product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,7 +29,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       if (next is AuthSuccess) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProductPage()),
+          MaterialPageRoute(builder: (context) => const AllProductsPage()),
         );
       } else if (next is AuthError) {
         ScaffoldMessenger.of(context).showSnackBar(

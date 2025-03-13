@@ -1,4 +1,5 @@
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/all_product_usecase.dart';
+import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/category_usecase.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/search_product_usecase.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/sort_product_usecase.dart';
 import 'package:clean_architecture_dummy/feauteres/product/presentation/manager/all_product/all_product_state.dart';
@@ -8,11 +9,13 @@ class AllProductsNotifier extends StateNotifier<AllProductsState> {
   final GetAllProductsUseCase getAllProduct;
   final SearchProductsUseCase searchProductsUseCase;
   final SortProductsUseCase sortProductsUseCase;
+  final CategoryUseCase getProductsByCategoryUseCase;
 
   AllProductsNotifier({
     required this.getAllProduct,
     required this.searchProductsUseCase,
     required this.sortProductsUseCase,
+    required this.getProductsByCategoryUseCase,
   }) : super(AllProductsInitial());
 
   Future<void> fetchAllProducts() async {
@@ -37,11 +40,23 @@ class AllProductsNotifier extends StateNotifier<AllProductsState> {
 
   Future<void> sortProducts(
       {required String sortName, required String ascDesc}) async {
-    state = AllProductsInitial();
+    state = AllProductsLoading();
     try {
       final sortProducts =
           await sortProductsUseCase(sortName: sortName, ascDesc: ascDesc);
       state = AllProductsLoaded(sortProducts);
+    } catch (e) {
+      state = AllProductsError(e.toString());
+    }
+  }
+
+  Future<void> fetchProductsByCategory({required String category}) async {
+    state = AllProductsLoading();
+    try {
+      final categoryProducts =
+          await getProductsByCategoryUseCase(category: category);
+
+      state = AllProductsLoaded(categoryProducts);
     } catch (e) {
       state = AllProductsError(e.toString());
     }

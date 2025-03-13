@@ -28,4 +28,9 @@ class ProductRepositoryImpl implements ProductRepository {
       {required String sortName, required String ascDesc}) {
     return remoteDataSource.sortProducts(sortName: sortName, ascDesc: ascDesc);
   }
+
+  @override
+  Future<AllProducts> getProductsByCategory({required String category}) {
+    return remoteDataSource.categoryProducts(category: category);
+  }
 }

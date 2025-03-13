@@ -7,6 +7,7 @@ abstract class ProductRepository {
   Future<AllProducts> getAllProducts();
 
   Future<AllProducts> searchProducts({required String word});
+  Future<AllProducts> getProductsByCategory({required String category});
 
   Future<AllProducts> sortProducts(
       {required String sortName, required String ascDesc});

@@ -1,72 +1,46 @@
-import 'package:clean_architecture_dummy/core/route/route_names.dart';
-import 'package:clean_architecture_dummy/feauteres/product/presentation/manager/single_product/product_provider.dart';
-import 'package:clean_architecture_dummy/feauteres/product/presentation/manager/single_product/product_state.dart';
-import 'package:clean_architecture_dummy/feauteres/product/presentation/widgets/widget.dart';
+import 'package:clean_architecture_dummy/feauteres/product/domain/entities/all_product_entities.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductPage extends ConsumerStatefulWidget {
-  const ProductPage({Key? key}) : super(key: key);
+class ProductPage extends StatelessWidget {
+  final Product product;
 
-  @override
-  ConsumerState<ProductPage> createState() => _ProductPageState();
-}
-
-class _ProductPageState extends ConsumerState<ProductPage> {
-  final TextEditingController _idController = TextEditingController();
-
-  void _fetchProduct() {
-    final id = int.tryParse(_idController.text.trim());
-    if (id != null && id > 0) {
-      ref.read(productProvider.notifier).fetchProduct(id);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter a valid product ID")),
-      );
-    }
-  }
+  const ProductPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    final productState = ref.watch(productProvider);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Fetch Product"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, RouteNames.allProductPage);
-              },
-              icon: Icon(Icons.arrow_circle_right_outlined))
-        ],
+        title: Text(product.title),
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _idController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Enter Product ID",
-                border: OutlineInputBorder(),
+            Center(
+              child: Image.network(
+                product.thumbnail,
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _fetchProduct,
-              child: const Text("Get Product"),
-            ),
             const SizedBox(height: 20),
-            if (productState is ProductLoading)
-              const CircularProgressIndicator(),
-            if (productState is ProductError)
-              Text(productState.message,
-                  style: const TextStyle(color: Colors.red)),
-            if (productState is ProductLoaded)
-              ProductWidget(product: productState.product),
+            Text(
+              product.title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "\$${product.price}",
+              style: const TextStyle(fontSize: 20, color: Colors.green),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              product.description,
+              style: const TextStyle(fontSize: 16),
+            ),
           ],
         ),
       ),
