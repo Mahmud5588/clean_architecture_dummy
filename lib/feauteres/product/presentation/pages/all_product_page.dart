@@ -88,13 +88,6 @@ class _AllProductsPageState extends ConsumerState<AllProductsPage> {
                   child: const Text("Price",
                       style: TextStyle(color: Colors.white)),
                 ),
-                ElevatedButton(
-                  onPressed: () => sortProducts("rating"),
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  child: const Text("Rating",
-                      style: TextStyle(color: Colors.white)),
-                ),
               ],
             ),
             const SizedBox(height: 30),

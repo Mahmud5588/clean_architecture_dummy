@@ -54,6 +54,6 @@ final allProductsProvider =
     searchProductsUseCase: ref.watch(searchAllProductsUseCaseProvider),
     sortProductsUseCase: ref.watch(sortAllProductUseCaseProvider),
     getProductsByCategoryUseCase:
-        ref.watch(getProductsByCategoryUseCaseProvider), // ✅ To‘g‘ri provider
+        ref.watch(getProductsByCategoryUseCaseProvider),
   );
 });
