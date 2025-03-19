@@ -1,12 +1,12 @@
-import 'package:clean_architecture_dummy/feauteres/product/domain/entities/product_entities.dart';
-import 'package:clean_architecture_dummy/feauteres/product/domain/repositories/product_repository.dart';
+import 'package:clean_architecture_dummy/feauteres/product/domain/entities/category_entities.dart';
+import 'package:clean_architecture_dummy/feauteres/product/domain/repositories/category_repository.dart';
 
 class CategoryUseCase {
-  final ProductRepository repository;
+  final CategoryRepository repository;
 
   CategoryUseCase(this.repository);
 
-  Future<AllProducts> call({required String category}) {
-    return repository.getProductsByCategory(category: '');
+  Future<List<Category>> getCategories() {
+    return repository.getCategories();
   }
 }

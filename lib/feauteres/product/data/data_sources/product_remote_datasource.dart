@@ -5,7 +5,6 @@ import '../models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<ProductModel> getSingleProduct({required int id});
-  Future<AllProductsModel> categoryProducts({required String category});
 
   Future<AllProductsModel> getAllProduct();
 
@@ -63,16 +62,6 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     final response = await dio
         .get('https://dummyjson.com/products?sortBy=$sortName&order=$ascDesc');
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return AllProductsModel.fromJson(response.data);
-    } else {
-      throw Exception('Failed to sort');
-    }
-  }
-
-  @override
-  Future<AllProductsModel> categoryProducts({required String category}) async {
-    final response = await dio.get('https://dummyjson.com/products/$category');
     if (response.statusCode == 200 || response.statusCode == 201) {
       return AllProductsModel.fromJson(response.data);
     } else {

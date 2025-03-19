@@ -2,7 +2,6 @@ import 'package:clean_architecture_dummy/feauteres/product/data/data_sources/pro
 import 'package:clean_architecture_dummy/feauteres/product/data/repositories/product_repository_imp.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/repositories/product_repository.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/all_product_usecase.dart';
-import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/category_usecase.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/product_usecase.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/search_product_usecase.dart';
 import 'package:clean_architecture_dummy/feauteres/product/domain/use_cases/sort_product_usecase.dart';
@@ -43,17 +42,11 @@ final productProvider =
     StateNotifierProvider<ProductNotifier, ProductState>((ref) {
   return ProductNotifier(ref.watch(getProductUseCaseProvider));
 });
-final getProductsByCategoryUseCaseProvider = Provider<CategoryUseCase>((ref) {
-  return CategoryUseCase(ref.watch(productRepositoryProvider));
-});
 
 final allProductsProvider =
     StateNotifierProvider<AllProductsNotifier, AllProductsState>((ref) {
   return AllProductsNotifier(
-    getAllProduct: ref.watch(getAllProductsUseCaseProvider),
-    searchProductsUseCase: ref.watch(searchAllProductsUseCaseProvider),
-    sortProductsUseCase: ref.watch(sortAllProductUseCaseProvider),
-    getProductsByCategoryUseCase:
-        ref.watch(getProductsByCategoryUseCaseProvider),
-  );
+      getAllProduct: ref.watch(getAllProductsUseCaseProvider),
+      searchProductsUseCase: ref.watch(searchAllProductsUseCaseProvider),
+      sortProductsUseCase: ref.watch(sortAllProductUseCaseProvider));
 });
